@@ -1,0 +1,2 @@
+mingw32-gcc.exe   -c C:\Users\Sandy\Desktop\CPS-6\LinkedList\main.c -o C:\Users\Sandy\Desktop\CPS-6\LinkedList\main.o
+mingw32-g++.exe  -o C:\Users\Sandy\Desktop\CPS-6\LinkedList\main.exe C:\Users\Sandy\Desktop\CPS-6\LinkedList\main.o

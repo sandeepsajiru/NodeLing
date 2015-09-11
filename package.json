@@ -1,0 +1,35 @@
+{
+  "name": "node-compiler",
+  "private": false,
+  "decription": "Test Project",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ejs": "~0.8.5",
+    "express": "3.4.1",
+    "jade": "*",
+    "mongoose": "^4.1.3",
+    "multiline": "*",
+    "nodemon": "^1.4.1",
+    "ps-tree": "^1.0.0",
+    "shortid": "^2.2.2",
+    "sync": "*",
+    "tmp": "*",
+    "tree-kill": "^0.1.1"
+  },
+  "description": "",
+  "version": "1.0.0",
+  "main": "server.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beingzero/onlineNodeCompiler.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/beingzero/onlineNodeCompiler/issues"
+  },
+  "homepage": "https://github.com/beingzero/onlineNodeCompiler#readme"
+}

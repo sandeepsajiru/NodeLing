@@ -1,0 +1,28 @@
+{
+  "testCases": [
+    {
+      "id": "1",
+      "desc": "lores ipsum",
+      "input": "1",
+      "output": "1"
+    },
+    {
+      "id": "2",
+      "desc": "lores ipsum",
+      "input": "3",
+      "output": "7"
+    },
+    {
+      "id": "3",
+      "desc": "lores ipsum",
+      "input": "4",
+      "output": "24"
+    },
+    {
+      "id": "4",
+      "desc": "lores ipsum",
+      "input": "5",
+      "output": "120"
+    }
+  ]
+}
