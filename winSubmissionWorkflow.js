@@ -11,27 +11,32 @@ process.on('message', function (message) {
 
         //TODO:  Make it generic to invoke any compiler  C, Java, Python
         var compiler = child_process.fork(__dirname + '/cCompiler.js', [], { killSignal: 'SIGKILL', timeout: "20000" });
-        compiler.send({ 'sourceFilePath': message.srcFilePath });
+        compiler.send({ 'sourceFilePath': message.srcFilePath, userCodeStartLine: message.userCodeStartLine });
 
         compiler.on('message', function (message) {
-            // console.log("Compiler Sent: " + message.exeFilePath);
 
-            // Run Test Cases
-            var tcExecutor = child_process.fork(__dirname + '/testCaseExecutor.js');
-            tcExecutor.send({ exeFilePath: message.exeFilePath, tcFilePath: __dirname + "\\tc_factorial.txt", prob: prob });
+            if (message.compileSuccess) {
+                // Run Test Cases
+                var tcExecutor = child_process.fork(__dirname + '/testCaseExecutor.js');
+                tcExecutor.send({ exeFilePath: message.exeFilePath, tcFilePath: __dirname + "\\tc_factorial.txt", prob: prob });
 
-            tcExecutor.on('exit', function () {
-                // console.log("Executor EXITED");
-            });
+                tcExecutor.on('exit', function () {
+                    // console.log("Executor EXITED");
+                });
 
-            tcExecutor.on('close', function () {
-                // console.log("Executor Closed");
-            });
+                tcExecutor.on('close', function () {
+                    // console.log("Executor Closed");
+                });
 
-            tcExecutor.on('message', function (message) {
-                console.log(message);
+                tcExecutor.on('message', function (message) {
+                    message.compileSuccess = true;
+                    console.log(message);
+                    process.send(message);
+                });
+            }
+            else {
                 process.send(message);
-            });
+            }
         });
     });
 

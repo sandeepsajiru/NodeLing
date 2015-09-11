@@ -1,6 +1,7 @@
 var tmp = require('tmp');
 var multiline = require("multiline");
 var fs = require('fs');
+var endOfLine = require('os').EOL;
 
 var tmpobj = tmp.fileSync({postfix:'.c', keep:'true'});
 var outputFilePath ='';
@@ -21,11 +22,19 @@ int main()
 */
 });
 
-var masterCode = '';
-
 process.on('message', function(message){
+    
+    var masterCode = message.prob.instructorCode;
+    var linesOfCode = masterCode.split(endOfLine);
+    var c = 0;
+    for (i = 0; i < linesOfCode.length; i++) {
+        c++;
+        if (linesOfCode[i].indexOf("%USER_CODE%")!=-1) {
+            break;
+        }
+    }
+    
     // masterCode - Replace - %USER_CODE% with string value of userCode
-    masterCode = message.prob.instructorCode;
 	var mergedCode = masterCode.replace("%USER_CODE%", message.userCode);
 	console.log(mergedCode);
 
@@ -33,7 +42,7 @@ process.on('message', function(message){
 		if(err) {
 			return console.log(err);
 		}
-	process.send({srcFilePath : outputFilePath});
+	process.send({srcFilePath : outputFilePath, userCodeStartLine: c});
 	console.log("The file was saved!");
 	process.exit();
 })
