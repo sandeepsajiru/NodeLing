@@ -18,7 +18,7 @@ process.on('message', function (message) {
             if (message.compileSuccess) {
                 // Run Test Cases
                 var tcExecutor = child_process.fork(__dirname + '/testCaseExecutor.js');
-                tcExecutor.send({ exeFilePath: message.exeFilePath, tcFilePath: __dirname + "\\tc_factorial.txt", prob: prob });
+                tcExecutor.send({ exeFilePath: message.exeFilePath, prob: prob });
 
                 tcExecutor.on('exit', function () {
                     // console.log("Executor EXITED");

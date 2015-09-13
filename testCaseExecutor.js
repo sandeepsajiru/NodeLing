@@ -1,15 +1,10 @@
-var exeFilePath = 'magicsquare.exe';
-var tcFilePath = 'tc_magicsquare.txt';
 var cp = require("child_process");
 var endOfLine = require('os').EOL;
-// var kill = require('tree-kill');
 
 process.on('message', function (message) {
-    exeFilePath = message.exeFilePath;
-    tcFilePath = message.tcFilePath;
-
-    var tcTotalExecuted = 0;
+    var exeFilePath = message.exeFilePath;
     var testCases = message.prob.testCases;
+    var tcTotalExecuted = 0;
     var jsonOutput = [];
     testCases.forEach(
             function executeTestCase(testCase) {

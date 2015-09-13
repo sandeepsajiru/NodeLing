@@ -24,9 +24,8 @@
 			<div class="col-1-3">
 				<div class="loading" style="display:none"></div>				
 				<h3>Result</h3>
-				<textarea name="result" id="result" cols="80" rows="8" disabled="disabled"></textarea>
-			</div>
-			</form>
+				<div name="result" id="result" cols="80" rows="4" disabled="disabled"></div>
+    </form>
     </div>
     <ul>
         <li ng-repeat="x in results">
@@ -86,7 +85,7 @@
 		    // console.log(textAce);
 		});
 
-		$('#myCode').submit(function (event) {
+	   $('#myCode').submit(function (event) {
 			event.preventDefault();
 			$('.loading').slideDown('slow');
 			$('#result').html('');
@@ -102,9 +101,15 @@
 			    success: function(data) {
                     
 			        if (!data.compileSuccess) {
-			        	$('#result').html(data.error);
+			        	$('#result').html("<b>Compilation FAILED</b><br>"+data.error.replace(new RegExp('\r?\n','g'), '<br />'));
 			        } else {
-			        	$('#result').html(data.testCaseResults[0].result);
+                        var r='';
+                        data.testCaseResults.forEach(                            
+                            function(val){
+                                r+=val.testCase.desc+'  '+val.result + '<br />';
+                            }
+                        );
+			        	$('#result').html(r);
 			        }
 			        $('.loading').slideUp('slow');
 			    },
