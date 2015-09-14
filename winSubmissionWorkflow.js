@@ -30,7 +30,6 @@ process.on('message', function (message) {
 
                 tcExecutor.on('message', function (message) {
                     message.compileSuccess = true;
-                    console.log(message);
                     process.send(message);
                 });
             }

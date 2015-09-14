@@ -119,9 +119,15 @@ app.get('/compile', function (req, res) {
 
 app.get('/question/:questionId', function (req, res) {
     var id = req.params.questionId;
-    console.log("id: " + id);
     problemModel.findOne({ id: id }, function (err, prob) {
-        res.render('submission', {problem: prob});
+        res.format({
+            json: function () {
+                res.send({ problem: prob });
+            },
+            html: function () {
+                res.render('submission', { problem: prob });
+            }
+        });
     });
 });
 
@@ -189,7 +195,7 @@ app.post('/compile', function (req, res) {
 
     var script = req.body.script;
     var probId = req.body.probId;
-    var masterCode = '';
+
     problemModel.findOne({ id: probId }, function (err, prob) {
         startWorkflow({ script: script, prob: prob }, function (result) {
             res.json(result);
