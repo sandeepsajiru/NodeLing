@@ -13,22 +13,31 @@ var mongoose = require('mongoose');
 var shortid = require('shortid');
 var endOfLine = require('os').EOL;
 
+/**
+ * DB related - MongoDB.
+ */
+
 mongoose.connect("mongodb://localhost/onlineCoding");
 
 var problemSchema = mongoose.Schema({
     id: String,
     title: String,
     description: String,
-    examples: String,
+    example: String,
+    language: String,
+    section: String,
+    explaination: String,
     testCases: [
 	{
 	    id: String,
 	    desc: String,
 	    input: String,
-	    output: String
+	    expectedOutput: String,
+        actualOutput: String
 	}],
     instructorCode: String,
-    userCode: String
+    userCode: String,
+    solutionCode: String
 }
 );
 
@@ -51,7 +60,6 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
-
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -76,24 +84,33 @@ function addTask(data, callback) {
         tasks[taskId] = callback;
         child.send({ id: taskId, script: data.script, inputs: data.inputs });
     });
-}
-
-child.on('message', function (message) {
-    // Look up the callback bound to this id and invoke it with the result
-    tasks[message.id](message);
-});
+};
 
 submissionWorkflow.on('message', function (message) {
     console.log(message);
     cb(message);
 });
 
+function startWorkflow(data, callback) {
+    cb = callback;
+    submissionWorkflow.send({ data: data.script, prob: data.prob });
+};
+
+child.on('message', function (message) {
+    // Look up the callback bound to this id and invoke it with the result
+    tasks[message.id](message);
+});
+
 child.on('exit', function (code, signal) {
     console.log('Child exited:', code, signal);
 });
 
+/**
+ * HTTP GET routes.
+ */
+
 app.get('/', function (req, res) {
-    res.sendfile(__dirname + '\\angular_Home.html');
+    res.sendfile(__dirname + '/public/angular_Home.html');
 });
 
 app.get('/compile', function (req, res) {
@@ -104,7 +121,7 @@ app.get('/question/:questionId', function (req, res) {
     var id = req.params.questionId;
     console.log("id: " + id);
     problemModel.findOne({ id: id }, function (err, prob) {
-        res.render('submission', { title: prob.title, description: prob.description, userCode: prob.userCode,  id: prob.id});
+        res.render('submission', {problem: prob});
     });
 });
 
@@ -114,14 +131,22 @@ app.get('/questions', function (req, res) {
     });
 });
 
+/**
+ * HTTP POST routes.
+ */
+
 app.post('/questions', function (req, res) {
     var id = shortid.generate();
     var title = req.body.title;
     var desc = req.body.description;
-    var examples = req.body.examples || '';
+    var example = req.body.example || '';
+    var explaination = req.body.explaination || '';
     var testCases = req.body.testCases;
     var instructorCode = req.body.instructorCode;
     var userCode = req.body.userCode;
+    var solutionCode = req.body.solutionCode;
+    var language = req.body.language;
+    var section = req.body.section;
 
     var tcJson = [];
     var tcId = 1;
@@ -133,7 +158,7 @@ app.post('/questions', function (req, res) {
                 id: tcId,
                 desc: comp[0],
                 input: comp[1],
-                output: comp[2]
+                expectedOutput: comp[2]
             });
             tcId++;
         }
@@ -141,8 +166,8 @@ app.post('/questions', function (req, res) {
 
     var prob = new problemModel({
         id: id, title: title, description: desc,
-        examples: examples, testCases: tcJson,
-        instructorCode: instructorCode, userCode: userCode
+        example: example, explaination: explaination, testCases: tcJson,
+        instructorCode: instructorCode, userCode: userCode, solutionCode: solutionCode, language: language, section: section
     });
 
     prob.save(function (err) {
@@ -159,10 +184,6 @@ app.post('/questions', function (req, res) {
     });
 });
 
-function startWorkflow(data, callback) {
-    cb = callback;
-    submissionWorkflow.send({ data: data.script, prob: data.prob });
-}
 app.post('/compile', function (req, res) {
     res.header('Access-Control-Allow-Origin', '*');
 
@@ -176,6 +197,11 @@ app.post('/compile', function (req, res) {
     });
 
 });
+
+
+/**
+ * Express web server.
+ */
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('node compiler v0.2 active on port ' + app.get('port'));

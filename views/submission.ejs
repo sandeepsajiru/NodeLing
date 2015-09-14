@@ -10,15 +10,16 @@
 </head>
 <body>
     <div>
-        <h3><%= title %></h3>
-        <p class="text-primary"><%= description %></p>
+        <h3><%= problem.title %></h3>
+        <p class="text-primary"><%= problem.description %></p>
+        <p class="text-primary"><%= problem.example %></p>
     </div>
     
     <div>
     <form method="post" id="myCode">
 			<div class="col-2-3">
-					<textarea name="script" id="textarea" cols="80" rows="15"><%= userCode %></textarea>
-                    <textarea name="probId" style="display:none"><%= id %></textarea>
+					<textarea name="script" id="textarea" cols="80" rows="15"><%= problem.userCode %></textarea>
+                    <textarea name="probId" style="display:none"><%= problem.id %></textarea>
 					<button class="btn" type="submit">Save and Compile!</button>				
 			</div>
 			<div class="col-1-3">

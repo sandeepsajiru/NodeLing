@@ -24,7 +24,7 @@ process.on('message', function (message) {
                         });
 
                     } else {
-                        if (stdout === testCase.output) {
+                        if (stdout === testCase.expectedOutput) {
                             jsonOutput.push({
                                 testCase: testCase,
                                 result: "Passed"
