@@ -102,7 +102,7 @@
 			    success: function(data) {
                     
 			        if (!data.compileSuccess) {
-			        	$('#result').html("<b>Compilation FAILED</b><br>"+data.error.replace(new RegExp('\r?\n','g'), '<br />'));
+			        	$('#result').html("<p style='color:red'><b>Compilation FAILED</b><br/>"+data.error.replace(new RegExp('\r?\n','g'), '<br />'))+"</p>";
 			        } else {
                         var r='';
                         data.testCaseResults.forEach(                            

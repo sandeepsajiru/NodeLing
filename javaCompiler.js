@@ -7,17 +7,15 @@ function prepareCompileErrorStr(compileError, userCodeStartLine) {
     var newErrorStr = '';
     errorLine.forEach(
         function process(val) {
-            var idx = -1;
             val += endOfLine;
-            if((idx=val.indexOf(".c:"))!=-1)
-                val = val.substring(idx + 3);
-            if ((idx = val.indexOf(".exe:")) != -1)
-                val = val.substring(idx + 5);
+            var idx = -1;
+            if((idx=val.indexOf(".java:"))!=-1)
+                val = val.substring(idx + 6);
 
             var lineNumber = Number(val.substring(0, val.indexOf(":")));
             if (!isNaN(lineNumber) && lineNumber > 0) {
                 lineNumber -= userCodeStartLine-1;
-                newErrorStr += '     '+ lineNumber + val.substring(val.indexOf(":"));
+                newErrorStr += lineNumber + val.substring(val.indexOf(":"));
             }
             else {
                 newErrorStr += val;
@@ -33,10 +31,11 @@ process.on('message', function (message) {
     var srcDirPath = path.dirname(sourceFilePath);
     var extension = path.extname(sourceFilePath);
     var fileNameWithoutExt = path.basename(sourceFilePath, extension);
-    var destinationFilePath = path.join(srcDirPath, fileNameWithoutExt + ".exe");
+    var destinationFilePath = path.join(srcDirPath, fileNameWithoutExt);
+    console.log('---------', fileNameWithoutExt, '  ', destinationFilePath, ' ', extension, '  ', srcDirPath);
 
-    var cmdLine = "mingw32-gcc.exe -Wall -Werror " + sourceFilePath + " -o " + destinationFilePath;
-
+    var cmdLine = "javac " + sourceFilePath;
+    var destinationExecutable = 'java -cp ' + srcDirPath + ' ' + fileNameWithoutExt;
     sh.exec(cmdLine, function (error, stdout, stderr) {
         if (error !== null) {
             console.log(stderr);
@@ -49,7 +48,7 @@ process.on('message', function (message) {
         } else {
             process.send({
                 compileSuccess: true,
-                exeFilePath: destinationFilePath
+                exeFilePath: destinationExecutable
             });
             process.exit();
 

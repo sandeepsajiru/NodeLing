@@ -67,8 +67,6 @@ app.use(function (req, res, next) {
     next();
 });
 
-var child = child_process.fork(__dirname + '/child-win.js');
-var submissionWorkflow = child_process.fork(__dirname + '/winSubmissionWorkflow.js');
 var taskId = 1;
 var tasks = {};
 var cb = function () { };
@@ -86,8 +84,9 @@ function addTask(data, callback) {
     });
 };
 
+var submissionWorkflow = child_process.fork(__dirname + '/winSubmissionWorkflow.js');
+
 submissionWorkflow.on('message', function (message) {
-    console.log(message);
     cb(message);
 });
 
@@ -95,6 +94,8 @@ function startWorkflow(data, callback) {
     cb = callback;
     submissionWorkflow.send({ data: data.script, prob: data.prob });
 };
+
+var child = child_process.fork(__dirname + '/child-win.js');
 
 child.on('message', function (message) {
     // Look up the callback bound to this id and invoke it with the result
@@ -201,7 +202,6 @@ app.post('/compile', function (req, res) {
             res.json(result);
         });
     });
-
 });
 
 

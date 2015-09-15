@@ -8,7 +8,7 @@ process.on('message', function (message) {
     var jsonOutput = [];
     testCases.forEach(
             function executeTestCase(testCase) {
-                var proc = cp.execFile(exeFilePath, { killSignal: 'SIGKILL', timeout: "10000" }, function (error, stdout, stderr) {
+                var proc = cp.exec(exeFilePath, { killSignal: 'SIGKILL', timeout: "10000" }, function (error, stdout, stderr) {
                     if (error) {
                         jsonOutput.push({
                             testCase: testCase,
@@ -49,7 +49,7 @@ process.on('message', function (message) {
 
                 // Pass test case input by writing it on stdin.
                 proc.stdin.write(testCase.input);
-                proc.stdin.end();
+                proc.stdin.end();                
             }
     );
 });

@@ -1,28 +1,29 @@
 var tmp = require('tmp');
-var multiline = require("multiline");
+var path = require('path');
 var fs = require('fs');
 var endOfLine = require('os').EOL;
 
-var tmpobj = tmp.fileSync({ postfix: '.c', keep: 'true' });
-var outputFilePath = '';
-// generate Unique output File Path 
-outputFilePath = tmpobj.name;
-
-var masterCode1 = multiline(function () {/*
-#include <stdio.h>
-#include <stdlib.h> 
-%USER_CODE% 
-int main() 
-{ 
-    int n; 
-    scanf("%d", &n); 
-    printf("%d", factorial(n)); 
-    return 0; 
-}
-*/
-});
+var codeFolder = 'c:\\java';
 
 process.on('message', function (message) {
+    var fileExt = '';
+    switch (message.prob.language.toLowerCase()) {
+        case "c":
+            fileExt = '.c';
+            dirPrefix = 'cTempFolder_';
+            break;
+        case "java":
+            fileExt = '.java';
+            dirPrefix = 'javaTempFolder_';
+            break;
+        default:
+            fileExt = '.c';
+            dirPrefix = 'cTempFolder_';
+    }
+
+    // Generate Unique output File Path. 
+    var codeFolderObj = tmp.dirSync({ prefix: dirPrefix, dir: codeFolder, keep: 'true' });
+    var outputFilePath = path.join(codeFolderObj.name, 'Test' + fileExt);
 
     var masterCode = message.prob.instructorCode;
     var linesOfCode = masterCode.split(endOfLine);
@@ -36,7 +37,6 @@ process.on('message', function (message) {
 
     // masterCode - Replace - %USER_CODE% with string value of userCode
     var mergedCode = masterCode.replace("%USER_CODE%", message.userCode);
-
     fs.writeFile(outputFilePath, mergedCode, function (err) {
         if (err) {
             return console.log(err);
