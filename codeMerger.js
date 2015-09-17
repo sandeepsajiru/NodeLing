@@ -2,8 +2,9 @@ var tmp = require('tmp');
 var path = require('path');
 var fs = require('fs');
 var endOfLine = require('os').EOL;
+var config = require('config');
 
-var codeFolder = 'c:\\java';
+var codeFolder = config.get('CodeMerger.codeFolder');
 
 process.on('message', function (message) {
     var fileExt = '';

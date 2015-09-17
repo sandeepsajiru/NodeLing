@@ -1,0 +1,6 @@
+{
+	"CodeMerger" : {
+		// Requires existing folder - will not create on its own.
+		"codeFolder" : "C:\\Online-Code"
+	}
+}
