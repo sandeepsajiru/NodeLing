@@ -42,6 +42,7 @@
              //.success(function (response) {$scope.results = response.results;});
     });
     
+	var ace;
 	function inject(callback) {
 	    var baseUrl = "/src/";
 	    
@@ -58,9 +59,20 @@
 	    };
 
 	    load('ace-compiler.js', "ace/ext/textarea", function() {
-	        var ace = window.__ace_shadowed__;
-	        
-	        ace.options.mode = "c_cpp";
+	        ace = window.__ace_shadowed__;
+
+	        var probLang = "<%= problem.language %>";
+			switch(probLang.toLowerCase()) {
+				case "c":
+					ace.options.mode = "c_cpp";
+					ace.options.theme = "cobalt";
+					break;
+				case "java":
+					ace.options.mode = "java";
+					ace.options.theme = "eclipse";
+					break;
+			}
+
 	        var Event = ace.require("ace/lib/event");
 	        var areas = document.getElementsByTagName("textarea");
 	        for (var i = 0; i < areas.length; i++) {
