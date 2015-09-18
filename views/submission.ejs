@@ -47,11 +47,9 @@
         </form>
       </div>
         <div class="col-xs-6"><h3>Sample Output</h3>
-				<pre><%= problem.example %></pre>				
-				<h3>Execution Results</h3>
-			
-				
-			<div name="result" id="result" style="width:100%" class="resultsTable" disabled="disabled"></div>
+				<pre style="height:50%"><%= problem.example %></pre>	
+				<h3 style="display:none" id="execution_results_title">Execution Results</h3>
+				<div name="result" id="result" style="width:100%;height:50%;display:none"  class="resultsTable" disabled="disabled"></div>
                 </div></div>
         </div>
     </div>
@@ -125,7 +123,10 @@
 	   $('#myCode').submit(function (event) {
 			event.preventDefault();
 			$("#ajax_loader").show();
+
 			$('#result').html('');
+				$("#result").hide();
+					$("#execution_results_title").hide();
 			$('#textarea').val(textAce.getSession().getValue());
 			localStorage.mycode = textAce.getSession().getValue();
 			var datastring = $("#myCode").serialize();
@@ -137,6 +138,8 @@
 			    dataType: "json",
 			    success: function(data) {
                     $("#ajax_loader").hide();
+					$("#result").show();
+					$("#execution_results_title").show();
 			        if (!data.compileSuccess) {
 			        	$('#result').html("<p style='color:red'><b>Compilation FAILED</b><br/>"+data.error.replace(new RegExp('\r?\n','g'), '<br />'))+"</p>";
 			        } else {
