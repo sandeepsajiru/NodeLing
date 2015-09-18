@@ -22,7 +22,7 @@
     <div>
         <h3><%= problem.title %></h3>
         <p class="text-primary"><%= problem.description %></p>
-        <p class="text-primary"><%= problem.example %></p>
+        
     </div>
     
     <div>
@@ -34,8 +34,10 @@
 					<button class="btn btn-primary" type="submit">Submit</button>				
 			</div>
 			<div class="col-1-3">
-				<div class="loading" style="display:none"></div>				
-				<h3>Result</h3>
+				<div class="loading" style="display:none"></div>	
+				<h3>Sample Output</h3>
+				<pre style="width:600px"><%= problem.example %></pre>				
+				<h3>Execution Results</h3>
 				<div name="result" id="result" class="col-md-4 resultsTable" disabled="disabled"></div>
     </form>
     </div>
