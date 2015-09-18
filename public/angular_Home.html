@@ -1,53 +1,37 @@
 <!DOCTYPE html>
 <html>
+<head>
+ <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  </head>
 <body>
-
+	<div class="container">
     <div ng-app="myApp" ng-controller="customersCtrl">
-        <button ng-click="getAll()">getAllProblems</button>
-        <br />
-        <button ng-click="getSingle()">getSingleProblem</button>
-        <p><b>{{q.title}}</b></p>
-        <div>
-            {{q.description}}
-        </div>
-
-        <div>
-            {{q.examples}}
-        </div>
-
-        <div>
-            <textarea rows="30" cols="150">
-                {{q.userCode}}
-            </textarea>
-        </div>
-
-        <span name="probId">{{q.id}}</span>
-
-        <button>Submit</button>
-
-        <ul>
-            <li ng-repeat="x in names">
-                <a href="/question/{{x.id}}">{{x.title}}</a>
-                //{{ x.id + ', ' + x.title }}
-            </li>
-        </ul>
+			
+            <div class="col-md-3" ng-repeat="x in problems">
+			    <div class="panel panel-danger">
+					<div class="panel-heading"> <a href="/question/{{x.id}}">{{x.title}}</a></div>
+					<div class="panel-body">{{x.description}}</div>
+				</div>
+            </div>
+        
 
     </div>
-
+</div>
     <script>
         var app = angular.module('myApp', []);
         app.controller('customersCtrl', function ($scope, $http) {
 
-            $scope.getAll = function () {
+            //$scope.getAll = function () {
                 $http.get("questions")
                 .success(function (response) {
-                    $scope.names = response.questions;
+                    $scope.problems = response.questions;
                 })
                 .error(function () {
                     console.log("Error");
                 });
-            };
+            //};
 
             $scope.getSingle = function () {
                 $http.get("question/4kY-Ee6h")

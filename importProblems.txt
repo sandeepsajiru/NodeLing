@@ -1,0 +1,1 @@
+mongoimport /d onlineCoding /c problemmodels /type csv /file problems.csv --headerline

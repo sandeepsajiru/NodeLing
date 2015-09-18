@@ -48,6 +48,7 @@ process.on('message', function (message) {
                 });
 
                 // Pass test case input by writing it on stdin.
+				console.log(testCase.input);
                 proc.stdin.write(testCase.input);
                 proc.stdin.end();                
             }

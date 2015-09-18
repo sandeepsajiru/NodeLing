@@ -7,8 +7,18 @@
 	<script src="/scripts/jquery.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<style>
+		.resultsTable {
+			height:300px;
+			width:600px;
+			overflow:auto;
+			border:solid 2px #ff0000;
+		}
+	</style>
 </head>
 <body>
+	
+<div class="container">
     <div>
         <h3><%= problem.title %></h3>
         <p class="text-primary"><%= problem.description %></p>
@@ -20,12 +30,13 @@
 			<div class="col-2-3">
 					<textarea name="script" id="textarea" cols="80" rows="15"><%= problem.userCode %></textarea>
                     <textarea name="probId" style="display:none"><%= problem.id %></textarea>
-					<button class="btn" type="submit">Save and Compile!</button>				
+					<br/>
+					<button class="btn btn-primary" type="submit">Submit</button>				
 			</div>
 			<div class="col-1-3">
 				<div class="loading" style="display:none"></div>				
 				<h3>Result</h3>
-				<div name="result" id="result" cols="80" rows="4" disabled="disabled"></div>
+				<div name="result" id="result" class="col-md-4 resultsTable" disabled="disabled"></div>
     </form>
     </div>
     <ul>
@@ -33,13 +44,15 @@
     {{ x.result }}
   </li>
     </ul>
-    
+    </div>
     
 <script>
     var app=angular.module('app', []);
     app.controller('ctrl',function($scope, $http) {
         //$http.post("/compile")
              //.success(function (response) {$scope.results = response.results;});
+			 
+		$scope.resultsFunction = function($scope){ alert('alerted')};
     });
     
 	var ace;
@@ -117,11 +130,22 @@
 			        	$('#result').html("<p style='color:red'><b>Compilation FAILED</b><br/>"+data.error.replace(new RegExp('\r?\n','g'), '<br />'))+"</p>";
 			        } else {
                         var r='';
+						r+='<table class="table table-bordered" width="40%">';
+						//r+='<colgroup><col class="col-md-2"><col class="col-md-2"></colgroup>';
+						r+='<thead><tr><th class="col-md-2">Description</th><th class="col-md-2">Result</th></tr></thead>';
+						r+='<tbody>';
                         data.testCaseResults.forEach(                            
                             function(val){
-                                r+=val.testCase.desc+'  '+val.result + '<br />';
+								if(val.result=="Passed"){
+									r+='<tr class="success"><td>'+val.testCase.desc+'<td>'+val.result+'</tr>';
+								}
+								else
+								{
+									r+='<tr class="danger"><td>'+val.testCase.desc+'<td>'+val.result+'</tr>';
+								}
                             }
                         );
+						r+='</tbody></table>';
 			        	$('#result').html(r);
 			        }
 			        $('.loading').slideUp('slow');

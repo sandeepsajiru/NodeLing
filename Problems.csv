@@ -1,0 +1,27 @@
+id,Title,Description,Examples,InstructorCode,SolvedCode,UserCode,TestCases,Language,Section
+fb9bce,sleepIn,"The parameter weekday is true if it is a weekday, and the parameter vacation is true if we are on vacation. We sleep in if it is not a weekday or we're on vacation. Return true if we sleep in.","sleepIn(false, false) ? true
+sleepIn(true, false) ? false
+sleepIn(false, true) ? true","import java.util.*;
+public class Test
+{
+ %USER_CODE%
+
+ public static void main(String[] args)
+ {
+  Test to = new Test();
+  Scanner sc = new Scanner(System.in);
+  
+  System.out.print(to.sleepIn(sc.nextBoolean(), sc.nextBoolean()));
+ }
+}","public boolean sleepIn(boolean weekday, boolean vacation) {
+  if(!weekday || vacation)
+     return true;
+  return false;
+}
+","public boolean sleepIn(boolean weekday, boolean vacation) {
+  
+}
+","#true true#true
+#true false#false
+#false true#true
+#false false#true",Java,Warmup
