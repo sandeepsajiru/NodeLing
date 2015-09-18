@@ -1,6 +1,11 @@
 var cp = require("child_process");
 var endOfLine = require('os').EOL;
-
+function matchStrings(str1, str2)
+{
+	str1 = str1.trim();
+	str2 = str2.trim();
+	return (str1.toUpperCase()==str2.toUpperCase());
+}
 process.on('message', function (message) {
     var exeFilePath = message.exeFilePath;
     var testCases = message.prob.testCases;
@@ -24,7 +29,7 @@ process.on('message', function (message) {
                         });
 
                     } else {
-                        if (stdout === testCase.expectedOutput) {
+                        if (matchStrings(stdout,testCase.expectedOutput)) {
                             jsonOutput.push({
                                 testCase: testCase,
                                 actualOutput: stdout,
