@@ -13,26 +13,28 @@ process.on('message', function (message) {
                         jsonOutput.push({
                             testCase: testCase,
                             result: "Failed",
-                            extra: "TIME_LIMIT_EXCEEDED"
+                            actualOutput: "TIME_LIMIT_EXCEEDED"
                         });
 
                     } else if (stderr !== "") {
                         jsonOutput.push({
                             testCase: testCase,
                             result: "Failed",
-                            extra: "STDERR" + stderr
+                            actualOutput: "STDERR" + stderr
                         });
 
                     } else {
                         if (stdout === testCase.expectedOutput) {
                             jsonOutput.push({
                                 testCase: testCase,
+                                actualOutput: stdout,
                                 result: "Passed"
                             });
                         }
                         else {
                             jsonOutput.push({
                                 testCase: testCase,
+                                actualOutput: stdout,
                                 result: "Failed"
                             });
                         }

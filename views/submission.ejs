@@ -12,7 +12,7 @@
 			height:300px;
 			width:600px;
 			overflow:auto;
-			border:solid 2px #ff0000;
+			border:solid 2px #286090;
 		}
 	</style>
 </head>
@@ -28,7 +28,7 @@
     <div>
     <form method="post" id="myCode">
 			<div class="col-2-3">
-					<textarea name="script" id="textarea" cols="80" rows="15"><%= problem.userCode %></textarea>
+					<textarea name="script" id="textarea" cols="95" rows="15"><%= problem.userCode %></textarea>
                     <textarea name="probId" style="display:none"><%= problem.id %></textarea>
 					<br/>
 					<button class="btn btn-primary" type="submit">Submit</button>				
@@ -132,16 +132,16 @@
                         var r='';
 						r+='<table class="table table-bordered" width="40%">';
 						//r+='<colgroup><col class="col-md-2"><col class="col-md-2"></colgroup>';
-						r+='<thead><tr><th class="col-md-2">Description</th><th class="col-md-2">Result</th></tr></thead>';
+						r+='<thead><tr><th class="col-md-2">Description</th><th class="col-md-2">Result</th><th class="col-md-2">Actual Output</th><th class="col-md-2">Expected Output</th></tr></thead>';
 						r+='<tbody>';
                         data.testCaseResults.forEach(                            
                             function(val){
 								if(val.result=="Passed"){
-									r+='<tr class="success"><td>'+val.testCase.desc+'<td>'+val.result+'</tr>';
+									r+='<tr class="success"><td>'+val.testCase.desc+'<td>'+val.result+'<td>'+val.actualOutput+'<td>'+val.testCase.expectedOutput+'</tr>';
 								}
 								else
 								{
-									r+='<tr class="danger"><td>'+val.testCase.desc+'<td>'+val.result+'</tr>';
+									r+='<tr class="danger"><td>'+val.testCase.desc+'<td>'+val.result+'<td>'+val.actualOutput+'<td>'+val.testCase.expectedOutput+'</tr>';
 								}
                             }
                         );
