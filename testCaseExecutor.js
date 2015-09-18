@@ -4,6 +4,8 @@ function matchStrings(str1, str2)
 {
 	str1 = str1.trim();
 	str2 = str2.trim();
+	console.log(str1.toUpperCase());
+	console.log(str2.toUpperCase());
 	return (str1.toUpperCase()==str2.toUpperCase());
 }
 process.on('message', function (message) {
