@@ -133,7 +133,7 @@ app.get('/question/:questionId', function (req, res) {
 });
 
 app.get('/questions', function (req, res) {
-    problemModel.find({}, 'id title', function (err, prob) {
+    problemModel.find({}, 'id title description language section', function (err, prob) {
         res.send(JSON.stringify({ questions: prob }));
     });
 });
