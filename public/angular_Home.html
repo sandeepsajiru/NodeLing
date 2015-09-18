@@ -9,13 +9,13 @@
 	<div class="container">
     <div ng-app="myApp" ng-controller="customersCtrl">
 			
-            <div class="col-md-3" ng-repeat="x in problems">
+            <div class="col-md-3" ng-repeat="x in problems | limitTo:limitProblems ">
 			    <div class="panel panel-danger">
-					<div class="panel-heading"> <a href="/question/{{x.id}}">{{x.title}}</a></div>
+					<div class="panel-heading"> <a href="/question/{{x.id}}">{{x.title}}</a><div style="float:right">more</div></div>
 					<div class="panel-body">{{x.description}}</div>
 				</div>
             </div>
-        
+			<a href="#">more...</div>
 
     </div>
 </div>
@@ -23,6 +23,7 @@
         var app = angular.module('myApp', []);
         app.controller('customersCtrl', function ($scope, $http) {
 
+			$scope.limitProblems=3;
             //$scope.getAll = function () {
                 $http.get("questions")
                 .success(function (response) {
