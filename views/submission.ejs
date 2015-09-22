@@ -151,11 +151,11 @@
                         data.testCaseResults.forEach(                            
                             function(val){
 								if(val.result=="Passed"){
-									r+='<tr class="success"><td>'+val.testCase.desc+'<td>'+val.result+'<td>'+val.actualOutput+'<td>'+val.testCase.expectedOutput+'</tr>';
+									r+='<tr class="success"><td>'+val.testCase.desc+'<td>'+val.result+'<td>'+val.actualOutput.replace(new RegExp('\r?\n','g'), '<br />')+'<td>'+val.testCase.expectedOutput.replace(new RegExp('\r?\n','g'), '<br />')+'</tr>';
 								}
 								else
 								{
-									r+='<tr class="danger"><td>'+val.testCase.desc+'<td>'+val.result+'<td>'+val.actualOutput+'<td>'+val.testCase.expectedOutput+'</tr>';
+									r+='<tr class="danger"><td>'+val.testCase.desc+'<td>'+val.result+'<td>'+val.actualOutput.replace(new RegExp('\r?\n','g'), '<br />')+'<td>'+val.testCase.expectedOutput.replace(new RegExp('\r?\n','g'), '<br />')+'</tr>';
 								}
                             }
                         );

@@ -172,7 +172,7 @@ app.post('/questions', function (req, res) {
 
     var tcJson = [];
     var tcId = 1;
-    var tcStr = testCases.split(endOfLine);
+    var tcStr = testCases.split('~');
     tcStr.forEach(
         function prepareJson(val) {
             var comp = val.split('#');
