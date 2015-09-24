@@ -62,7 +62,7 @@
                 <div class='col-sm-4'>
                     <div class="form-group">
                         <label for="instructorCode">Instructor Code:</label>
-                        <div style="border: 1px solid gray;height:230px" rows="10" cols="80" id="editor" class="form-control" name="instructorCode">All code except whole function code replaced by %USER_CODE%</div>
+                        <div style="border: 1px solid gray;height:230px" rows="10" cols="80" id="editor" class="form-control" name="instructorCode"></div>
                     </div>
                 </div>
                 <div class='col-sm-4'>
@@ -94,7 +94,31 @@
     </div>
 
     <script>
+        var javaTemplate = {
+            code: ' import java.util.*; \n \
+public class Test \n \
+{\n \
+\tvoid templateFunction(String name, int age) \n \
+\t{ \n \
+\t\tSystem.out.println(); \n \
+\t} \n \
+\tstatic Scanner sc = new Scanner(System.in);\n \
+\tpublic static void main(String[] args)\n \
+\t{\n \
+\t\tint i = sc.nextInt();\n \
+\t}\n \
+}\n'};
         var quill = new Quill('#editor');
+        $(document).ready(function () {
+            
+            alert(javaTemplate.code);
+            quill.insertText(0, javaTemplate.code);
+        });
+
+    </script>
+    <script>
+        
+
         function extractUserCode() {
             quill.focus();
             var range = quill.getSelection();
