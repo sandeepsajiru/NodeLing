@@ -100,14 +100,16 @@
             code: 'import java.util.*; \n\
 public class Test \n\
 {\n\
-\tvoid templateFunction(String name, int age) \n\
+\tvoid templateFunction() \n\
 \t{ \n\
-\t\tSystem.out.println(); \n\
+\t\t//System.out.println(); \n\
 \t} \n\
 \tstatic Scanner sc = new Scanner(System.in);\n\
 \tpublic static void main(String[] args)\n\
 \t{\n\
+\t\tTest test = new Test();\n\
 \t\tint i = sc.nextInt();\n\
+\t\tSystem.out.println(""+test.templateFunction());\n\
 \t}\n\
 }\n'};
         var quill = new Quill('#editor');
