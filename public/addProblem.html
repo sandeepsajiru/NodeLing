@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="//cdn.quilljs.com/0.20.0/quill.js"></script>
+    <script src="src-min/ace.js" charset="utf-8"></script>
 </head>
 <body>
 
@@ -97,45 +97,44 @@
 
     <script>
         var javaTemplate = {
-            code: 'import java.util.*; \n\
-public class Test \n\
-{\n\
-\tvoid templateFunction() \n\
-\t{ \n\
-\t\t//System.out.println(); \n\
-\t} \n\
-\tstatic Scanner sc = new Scanner(System.in);\n\
-\tpublic static void main(String[] args)\n\
-\t{\n\
-\t\tTest test = new Test();\n\
-\t\tint i = sc.nextInt();\n\
-\t\tSystem.out.println(""+test.templateFunction());\n\
-\t}\n\
-}\n'};
-        var quill = new Quill('#editor');
+            code:
+                'import java.util.*;\r\n' +
+                'public class Test \r\n'+
+                '{\r\n'+
+                '\tvoid templateFunction() \r\n'+
+                '\t{ \r\n'+
+                '\t\tSystem.out.println(); \r\n'+
+                '\t} \r\n'+
+                '\tstatic Scanner sc = new Scanner(System.in);\r\n'+
+                '\tpublic static void main(String[] args)\r\n'+
+                '\t{\r\n' +
+                '\t\tTest test = new Test();\r\n'+
+                '\t\tint i = sc.nextInt();\r\n' +
+                '\t\tSystem.out.println("");\r\n'+
+                '\t}\r\n'+
+                '}\r\n'
+        };
+        var editor;
         $(document).ready(function () {
-            quill.insertText(0, javaTemplate.code);
+            editor = ace.edit("editor");
+            editor.setTheme("ace/theme/eclipse");
+            editor.getSession().setMode("ace/mode/java");
+            editor.setValue(javaTemplate.code);
         });
 
-    </script>
-    <script>
-        
-
         function extractUserCode() {
-            quill.focus();
-            var range = quill.getSelection();
-            var selection = quill.getText(range.start, range.end);
-            quill.deleteText(range.start, range.end);
+            var selection = editor.session.getTextRange(editor.getSelectionRange());
+            editor.session.replace(editor.getSelectionRange(), "\t%USER_CODE%");
             $('#solvedCode').val(selection);
             var replacement = selection.substring(0, selection.indexOf('{'));
-			replacement = replacement+"{\n\n\n}";
-			replacement = replacement.replace(new RegExp('\t','g'),'');
+            replacement = replacement + "{\n\n}";
+            replacement = replacement.replace(new RegExp('\t', 'g'), '');
             $('#userCode').val(replacement);
-            quill.insertText(range.start, "        %USER_CODE%");
-			var s = quill.getText();
-			$('#ht').val(s);
-        }
+            $('#ht').val(editor.getValue());
+        };
+
     </script>
+
     <script>
         angular.module('radioExample', [])
           .controller('ExampleController', ['$scope', function ($scope) {
