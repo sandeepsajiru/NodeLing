@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="bzCompiler">
 <head>
     <title>Author A Problem</title>
     <meta charset="utf-8">
@@ -7,14 +7,15 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
     <script src="src-min/ace.js" charset="utf-8"></script>
 </head>
-<body>
+<body ng-controller="bzCompilerCtrl">
 
     <div class="container-fluid">
 
         <h2>Authoring New Problem</h2>
-        <form role="form" method="POST" action="/questions">
+        <form class="form" role="form" method="POST" action="/questions">
             <div class="row">
                 <div class='col-sm-4'>
                     <div class="form-group">
@@ -26,8 +27,8 @@
                     <div class="form-group">
                         <label for="testCases">Language:</label>
                         <br />
-                        <input type="radio" name="language" value="C" checked> C
-                        <input type="radio" name="language" value="JAVA"> JAVA
+                        <input type="radio" name="language" value="C" ng-click="changeTemplateCode()" ng-model="selectedLanguage"> C
+                        <input type="radio" name="language" value="JAVA" ng-click="changeTemplateCode()" ng-model="selectedLanguage"> JAVA
                     </div>
                 </div>
                 <div class='col-sm-4'>
@@ -62,7 +63,7 @@
                 <div class='col-sm-4'>
                     <div class="form-group">
                         <label for="instructorCode">Instructor Code:</label>
-                        <div style="border: 1px solid gray;height:230px" rows="10" cols="80" id="editor" class="form-control" ></div>
+                        <div style="border: 1px solid gray;height:230px" rows="10" cols="80" id="editor" class="form-control"></div>
                     </div>
                 </div>
                 <div class='col-sm-4'>
@@ -79,73 +80,225 @@
                 </div>
             </div>
 
+            <!-- New Code -->
+            <div class="row">
+                <div class="form-group">
+                    <div class='col-sm-6'>
+                        <input value="Extract UserCode" class="btn btn-primary" ng-click="extractUserCode()" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class='col-sm-12'>
+                    <div class="form-group">
+                        <label for="userCode">Test Cases:</label>
+                    </div>
+                </div>
+            </div>
 
-            <div class="form-group">
-                <label for="testCases">Test Cases:</label>
-                <textarea rows="3" cols="80" class="form-control" name="testCases" placeholder="1 test case per line - description string#input#expected output"></textarea>
+            <div class="row">
+                <textarea class="form-control" style="display:none" id="testCases" name="testCases"></textarea>
+                <div class='col-sm-6'>
+                    <div class="form-group">
+                        <div class='col-sm-12'>
+                            <label for="userCode">Description:</label>
+                            <input type="text" class="form-control" name="description" ng-model="description" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class='col-sm-6'>
+                            <label for="userCode">Input:</label>
+                            <textarea rows="4" class="form-control" name="input" ng-model="input"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class='col-sm-6'>
+                            <label for="userCode">Output:</label>
+                            <textarea rows="4" class="form-control" name="output" ng-model="output"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class='col-sm-12'>
+                            <p></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class='col-sm-6'>
+                            <input value="Add" class="btn btn-primary" ng-click="addRow()" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class='col-sm-12'>
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class='col-sm-6'>
+                    <table class="table">
+                        <tr>
+                            <th>
+                                Description
+                            </th>
+                            <th>
+                                Input
+                            </th>
+                            <th>
+                                Sample Output
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                        <tr ng-repeat="testCase in testCasesList">
+                            <td>
+                                {{testCase.description}}
+                            </td>
+                            <td>
+                                {{testCase.input}}
+                            </td>
+                            <td>
+                                {{testCase.output}}
+                            </td>
+                            <td><input type="button" value="Remove" class="btn btn-primary" ng-click="removeRow(testCase.description)" />
+                        </tr>
+                    </table>
+
+                </div>
             </div>
-            <div class="form-group">
-                <button class="btn btn-default btn-primary" name="submit">Submit</button>
-                <button class="btn" name="preview">Preview</button>
-                <button class="btn" name="run">Run</button>
+            <hr />
+
+            <div class="row">
+                <div class="form-group">
+                    <textarea rows="10" cols="80" class="form-control" id="ht" name="instructorCode" style="display:none"></textarea>
+                    <div class='col-md-6'>
+                    </div>
+                    <div class='col-md-6'>
+                        <div class='col-md-4'>
+                        </div>
+                        <div class='col-md-4'>
+                        </div>
+                        <div class='col-md-4'>
+                            <button class="btn btn-default btn-primary" name="submit">Submit</button>
+                            <button class="btn" name="preview">Preview</button>
+                            <button class="btn" name="run">Run</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-			<textarea rows="10" cols="80" class="form-control" id = "ht" name="instructorCode" style="display:none"></textarea>
         </form>
-        <button class="btn" name="run" onclick="extractUserCode()">Extract UserCode</button>
-		
     </div>
 
+    <!-- New Code -->
     <script>
         var javaTemplate = {
             code:
                 'import java.util.*;\r\n' +
-                'public class Test \r\n'+
-                '{\r\n'+
-                '\tvoid templateFunction() \r\n'+
-                '\t{ \r\n'+
-                '\t\tSystem.out.println(); \r\n'+
-                '\t} \r\n'+
-                '\tstatic Scanner sc = new Scanner(System.in);\r\n'+
-                '\tpublic static void main(String[] args)\r\n'+
+                'public class Test \r\n' +
+                '{\r\n' +
+                '\tvoid templateFunction() \r\n' +
+                '\t{ \r\n' +
+                '\t\tSystem.out.println(); \r\n' +
+                '\t} \r\n' +
+                '\tstatic Scanner sc = new Scanner(System.in);\r\n' +
+                '\tpublic static void main(String[] args)\r\n' +
                 '\t{\r\n' +
-                '\t\tTest test = new Test();\r\n'+
+                '\t\tTest test = new Test();\r\n' +
                 '\t\tint i = sc.nextInt();\r\n' +
-                '\t\tSystem.out.println("");\r\n'+
-                '\t}\r\n'+
+                '\t\tSystem.out.println("");\r\n' +
+                '\t}\r\n' +
                 '}\r\n'
         };
+        var cTemplate = {
+            code:
+                '#include<stdio.h>\r\n' +
+                'void template()\r\n' +
+                '{\r\n' +
+                '}\r\n' +
+                'int main()\r\n' +
+                '{\r\n' +
+                '\ttemplate();\r\n' +
+                '\treturn 0;\r\n' +
+                '}\r\n'
+        };
+
         var editor;
-        $(document).ready(function () {
+        var bzCompiler = angular.module("bzCompiler", []);
+        bzCompiler.controller("bzCompilerCtrl", function ($scope) {
+            $scope.testCasesList = [];
+            /*
+                                {
+                                    'description': 'Positive Test',
+                                    'input': 2,
+                                    'output': 'EVEN'
+                                },
+                                {
+                                    'description': 'Positive Test',
+                                    'input': 3,
+                                    'output': 'ODD'
+                                }
+            ];
+            */
             editor = ace.edit("editor");
             editor.setTheme("ace/theme/eclipse");
             editor.getSession().setMode("ace/mode/java");
+
+            $scope.extractUserCode = function () {
+                var selection = editor.session.getTextRange(editor.getSelectionRange());
+                editor.session.replace(editor.getSelectionRange(), "\t%USER_CODE%");
+                $('#solvedCode').val(selection);
+                var replacement = selection.substring(0, selection.indexOf('{'));
+                replacement = replacement + "{\n\n}";
+                replacement = replacement.replace(new RegExp('\t', 'g'), '');
+                $('#userCode').val(replacement);
+                $('#ht').val(editor.getValue());
+            };
+
+            $scope.changeTemplateCode = function () {
+                if($scope.selectedLanguage=="JAVA")
+                {
+                    editor.setValue(javaTemplate.code);
+                }
+                else
+                {
+                    editor.setValue(cTemplate.code);
+                }
+            };
+            $scope.selectedLanguage = 'JAVA';
             editor.setValue(javaTemplate.code);
+            $scope.updateTestCasesList = function () {
+                var tcValue = '';
+                var i;
+                for (i = 0; i < $scope.testCasesList.length; i++) {
+                    var currentObj = $scope.testCasesList[i];
+                    tcValue += currentObj.description + '#' + currentObj.input + '#' + currentObj.output + '~';
+                }
+                $('#testCases').val(tcValue);
+
+            };
+            $scope.addRow = function () {
+                $scope.testCasesList.push({ 'description': $scope.description, 'input': $scope.input, 'output': $scope.output });
+                $scope.description = '';
+                $scope.input = '';
+                $scope.output = '';
+                $scope.updateTestCasesList();
+            };
+            $scope.removeRow = function (description) {
+                var index = -1;
+                var comArr = eval($scope.testCasesList);
+                for (var i = 0; i < comArr.length; i++) {
+                    if (comArr[i].description === description) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index === -1) {
+                    alert("Something gone wrong");
+                }
+                $scope.testCasesList.splice(index, 1);
+                $scope.updateTestCasesList();
+            };
         });
-
-        function extractUserCode() {
-            var selection = editor.session.getTextRange(editor.getSelectionRange());
-            editor.session.replace(editor.getSelectionRange(), "\t%USER_CODE%");
-            $('#solvedCode').val(selection);
-            var replacement = selection.substring(0, selection.indexOf('{'));
-            replacement = replacement + "{\n\n}";
-            replacement = replacement.replace(new RegExp('\t', 'g'), '');
-            $('#userCode').val(replacement);
-            $('#ht').val(editor.getValue());
-        };
-
-    </script>
-
-    <script>
-        angular.module('radioExample', [])
-          .controller('ExampleController', ['$scope', function ($scope) {
-              $scope.color = {
-                  name: 'blue'
-              };
-              $scope.specialValue = {
-                  "id": "12345",
-                  "value": "green"
-              };
-          }]);
     </script>
 </body>
 </html>

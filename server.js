@@ -33,7 +33,7 @@ var problemSchema = mongoose.Schema({
 	    desc: String,
 	    input: String,
 	    expectedOutput: String,
-        actualOutput: String
+	    actualOutput: String
 	}],
     instructorCode: String,
     userCode: String,
@@ -140,7 +140,7 @@ app.get('/questions', function (req, res) {
 
 app.get('/questions/:language', function (req, res) {
     var language = req.params.language;
-    problemModel.find({ language: language}, 'id title description language section', function (err, prob) {
+    problemModel.find({ language: language }, 'id title description language section', function (err, prob) {
         res.send(JSON.stringify({ questions: prob }));
     });
 });
@@ -148,7 +148,7 @@ app.get('/questions/:language', function (req, res) {
 app.get('/questions/:language/:section', function (req, res) {
     var language = req.params.language;
     var section = req.params.section;
-    problemModel.find({ language: language, section: section}, 'id title description language section', function (err, prob) {
+    problemModel.find({ language: language, section: section }, 'id title description language section', function (err, prob) {
         res.send(JSON.stringify({ questions: prob }));
     });
 });
@@ -175,13 +175,15 @@ app.post('/questions', function (req, res) {
     var tcStr = testCases.split('~');
     tcStr.forEach(
         function prepareJson(val) {
-            var comp = val.split('#');
-            tcJson.push({
-                id: tcId,
-                desc: comp[0],
-                input: comp[1],
-                expectedOutput: comp[2]
-            });
+            if (val.trim().length != 0) {
+                var comp = val.split('#');
+                tcJson.push({
+                    id: tcId,
+                    desc: comp[0],
+                    input: comp[1],
+                    expectedOutput: comp[2]
+                });
+            }
             tcId++;
         }
     );
