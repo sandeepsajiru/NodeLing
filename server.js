@@ -208,6 +208,36 @@ app.post('/questions', function (req, res) {
     });
 });
 
+app.put('/question/update/:questionId',(function(req,res){
+	var id = req.params.questionId;
+	
+	problemModel.findOne({ id: id }, function (err, prob) {
+		if (err) {
+			return res.send(err);
+		}
+		for (prop in req.body) {
+			prob[prop] = req.body[prop];
+			console.log(prob[prop]);
+		}
+
+		// save the problem
+		prob.save(function(err) {
+			if (err) {
+				return res.send(err);
+			}
+
+			res.format({
+				json: function () {
+					res.send({ message: 'problem updated!' });
+				},
+				html: function () {
+					res.render('updation', { problem: prob });
+				}
+			});
+		});
+    });
+}));    
+
 app.post('/compile', function (req, res) {
     res.header('Access-Control-Allow-Origin', '*');
 
