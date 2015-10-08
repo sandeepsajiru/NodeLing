@@ -18,6 +18,12 @@
 			<div class='col-sm-4'>
 				<h2>Editing Problem</h2>
 			</div>
+			<div class='col-sm-4'>
+			ProblemId <input type="text" ng-model="fetchedProblemId" placeholder="NkpD3tNA"></input>
+			<input type="submit" value="fetch" ng-click="fetchProblem()"></input>
+			</div>
+			<div class='col-sm-4'>
+			</div>
 		</div>
         <form class="form" role="form">
             <div class="row">
@@ -203,29 +209,7 @@
 		$scope.testCasesList = [];
 		$scope.problem ={};
 		$scope.putSuccess = false;
-		var config = {
-			headers:  {
-				'Accept': 'application/json;odata=verbose',
-				"X-Testing" : "testing"
-			}
-		};
-		$http.get("/question/NkpD3tNA", config)
-		.success(function (response, $scope) {
-			$scope.problem = response.problem;
-
-		})
-		.then(function(result){
-			$scope.problem = result.data.problem;
-			editor.setValue($scope.problem.instructorCode);
-						
-			var i;
-            for (i = 0; i < $scope.problem.testCases.length; i++) {
-                    var co = $scope.problem.testCases[i];
-                    $scope.testCasesList.push({'desc':co.desc, 'input':co.input, 'expectedOutput':co.expectedOutput});
-                }
-			$scope.updateTestCasesList();
-				
-		});
+		
             editor = ace.edit("editor");
             editor.setTheme("ace/theme/eclipse");
             editor.getSession().setMode("ace/mode/java");
@@ -251,6 +235,31 @@
 				$http.put('/question/update/'+ $scope.problem.id, $scope.problem)
 				$scope.putSuccess = true;
 			};
+
+		$scope.fetchProblem = function(){
+			var config = {
+				headers:  {
+					'Accept': 'application/json;odata=verbose',
+					"X-Testing" : "testing"
+				}
+			};
+			$http.get("/question/"+$scope.fetchedProblemId, config)
+			.success(function (response, $scope) {
+				$scope.problem = response.problem;
+			})
+			.then(function(result){
+				$scope.problem = result.data.problem;
+				$scope.testCasesList.length = 0;
+				editor.setValue($scope.problem.instructorCode);
+				var i;
+				for (i = 0; i < $scope.problem.testCases.length; i++) {
+						var co = $scope.problem.testCases[i];
+						$scope.testCasesList.push({'desc':co.desc, 'input':co.input, 'expectedOutput':co.expectedOutput});
+					}
+				$scope.updateTestCasesList();
+					
+			});
+		};
 			
             //$scope.selectedLanguage = $scope.problem.language;
 
