@@ -34,8 +34,8 @@ process.on('message', function (message) {
     var destinationFilePath = path.join(srcDirPath, fileNameWithoutExt);
     console.log('---------', fileNameWithoutExt, '  ', destinationFilePath, ' ', extension, '  ', srcDirPath);
 
-    var cmdLine = "javac " + sourceFilePath;
-    var destinationExecutable = 'java -cp ' + srcDirPath + ' ' + fileNameWithoutExt;
+    var cmdLine = "javac -cp %CLASSPATH_COMPILER% " + sourceFilePath;
+    var destinationExecutable = 'java -cp ' + srcDirPath + ';%CLASSPATH_EXECUTOR% ' + fileNameWithoutExt;
     sh.exec(cmdLine, function (error, stdout, stderr) {
         if (error !== null) {
             console.log(stderr);
