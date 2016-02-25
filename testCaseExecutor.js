@@ -4,8 +4,8 @@ function matchStrings(str1, str2)
 {
 	str1 = str1.trim();
 	str2 = str2.trim();
-	console.log(str1.toUpperCase());
-	console.log(str2.toUpperCase());
+	//console.log(str1.toUpperCase());
+	//console.log(str2.toUpperCase());
 	return (str1.toUpperCase()==str2.toUpperCase());
 }
 process.on('message', function (message) {
@@ -57,7 +57,7 @@ process.on('message', function (message) {
                 });
 
                 // Pass test case input by writing it on stdin.
-				console.log(testCase.input);
+				//console.log(testCase.input);
                 proc.stdin.write(testCase.input);
                 proc.stdin.end();                
             }

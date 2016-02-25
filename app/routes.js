@@ -28,7 +28,7 @@ module.exports = function (app) {
     });
 
 	app.get('/all', function (req, res) {
-		console.log('Getting there');
+		//console.log('Getting there');
         res.sendfile('public/allSubmissions.html');
     });
 
@@ -176,7 +176,8 @@ module.exports = function (app) {
 
         var script = req.body.script;
         var probId = req.body.probId;
-		var userId = "test";
+		var userId = req.body.usName;
+		//console.log("USERID: "+ userId);
 		
 		problemModel.findOne({ id: probId }, function (err, prob) {
 			startWorkflow({ script: script, prob: prob }, function (result) {		
@@ -187,7 +188,8 @@ module.exports = function (app) {
 					userid: userId,
 					script: script,
 					problemid: probId,
-					dateTime: (new Date()).toString(),
+					//dateTime: (new Date()).toString(),
+					dateTime : (new Date()).valueOf(),
 					verdict:JSON.stringify(result)
 				});
 

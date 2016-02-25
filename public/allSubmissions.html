@@ -11,7 +11,7 @@
 			<table class="table table-bordered" width="40%">
 			<thead><tr><th class="col-md-2">Description</th><th class="col-md-2">Result</th><th class="col-md-2">Actual Output</th><th class="col-md-2">Expected Output</th></tr></thead>
 				<tbody>
-					<tr ng-repeat="x in submissions">
+					<tr ng-repeat="x in submissions|orderBy : '-dateTime'">
 						<td><a href="#">{{x.userid}}</a></td>
 						<td>{{x.problemid}}</td>
 						<td>{{x.dateTime}}</td>
