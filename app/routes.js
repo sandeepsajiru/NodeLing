@@ -2,6 +2,8 @@ var shortid = require('shortid');
 var endOfLine = require('os').EOL;
 var child_process = require('child_process');
 var problemModel = require('./models/problem.js');
+var submissionModel = require('./models/submission.js');
+
 
 var cb = function () { };
 
@@ -25,6 +27,12 @@ module.exports = function (app) {
         res.sendfile('public/angular_Home.html');
     });
 
+	app.get('/all', function (req, res) {
+		console.log('Getting there');
+        res.sendfile('public/allSubmissions.html');
+    });
+
+	
     app.get('/add', function (req, res) {
         res.sendfile('public/addProblem.html');
     });
@@ -54,6 +62,12 @@ module.exports = function (app) {
     app.get('/questions', function (req, res) {
         problemModel.find({}, 'id title description language section', function (err, prob) {
             res.send(JSON.stringify({ questions: prob }));
+        });
+    });
+	
+	app.get('/submissions', function (req, res) {
+        submissionModel.find({}, 'id userid script problemid dateTime verdict', function (err, subm) {
+            res.send(JSON.stringify({ submissions: subm }));
         });
     });
 
@@ -162,11 +176,28 @@ module.exports = function (app) {
 
         var script = req.body.script;
         var probId = req.body.probId;
+		var userId = "test";
+		
+		problemModel.findOne({ id: probId }, function (err, prob) {
+			startWorkflow({ script: script, prob: prob }, function (result) {		
+						
+				var submid = shortid.generate();
+				var subm = new submissionModel({
+					id: submid, 
+					userid: userId,
+					script: script,
+					problemid: probId,
+					dateTime: (new Date()).toString(),
+					verdict:JSON.stringify(result)
+				});
 
-        problemModel.findOne({ id: probId }, function (err, prob) {
-            startWorkflow({ script: script, prob: prob }, function (result) {
-                res.json(result);
-            });
+				subm.save(function (err) {
+					if (err)
+						console.log('Error Saving Submission '+err);
+				});
+			
+				res.json(result);
+			});
         });
     });
 };

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  </head>
+<body>
+	<div class="container">
+    <div ng-app="myApp" ng-controller="customersCtrl">
+			<table class="table table-bordered" width="40%">
+			<thead><tr><th class="col-md-2">Description</th><th class="col-md-2">Result</th><th class="col-md-2">Actual Output</th><th class="col-md-2">Expected Output</th></tr></thead>
+				<tbody>
+					<tr ng-repeat="x in submissions">
+						<td><a href="#">{{x.userid}}</a></td>
+						<td>{{x.problemid}}</td>
+						<td>{{x.dateTime}}</td>
+						<td>{{x.verdict}}</td>
+					</tr>
+				</tbody>
+			</table>
+    </div>
+</div>
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('customersCtrl', function ($scope, $http) {
+
+			$scope.limitProblems=3;
+            //$scope.getAll = function () {
+                $http.get("submissions")
+                .success(function (response) {
+                    $scope.submissions = response.submissions;
+					
+					for (var j = 0; j < $scope.submissions.length; j++){
+						
+						//for(var i=0;i<$scope.submissions[j].verdict.testCaseResults.length;i++){
+							
+							$scope.submissions[j]["result"] = false;
+							//break;
+							
+						//}
+					
+						
+					}
+					
+/*
+					$scope.submissions.forEach(
+						function(subm)
+						{
+							subm["result"]=subm.verdict.testCaseResults;
+						}
+					);
+					
+	
+					submissions.forEach(
+						function(subm){
+							subm.verdict.testCaseResults.forEach(                            
+								function(val){
+									if(val.result=="Failed"){
+										subm[result]="false";
+										break;
+									}
+								}
+							)
+						}
+					)*/
+				})
+                .error(function () {
+                    console.log("Error");
+                });
+            //};
+
+        });
+    </script>
+
+</body>
+</html>
